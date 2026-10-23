@@ -68,6 +68,15 @@ const App = {
             ageSection.style.display = perAge.checked ? "block" : "none";
         });
 
+        const randomizeTalent = document.getElementById("optTalent");
+        const randomizeTalentNear = document.getElementById("optTalentNear");
+        randomizeTalent.addEventListener("change", () => {
+            if (randomizeTalent.checked) randomizeTalentNear.checked = false;
+        });
+        randomizeTalentNear.addEventListener("change", () => {
+            if (randomizeTalentNear.checked) randomizeTalent.checked = false;
+        });
+
         const addBracketBtn = document.getElementById("addBracketBtn");
         addBracketBtn.addEventListener("click", () => {
             window.AgeConfig.addBracket();
@@ -162,6 +171,8 @@ const App = {
             randomizeBalance: document.getElementById("optBalance").checked,
             randomizeTraction: document.getElementById("optTraction").checked,
             randomizeTalent: document.getElementById("optTalent").checked,
+            randomizeTalentNear: document.getElementById("optTalentNear").checked,
+            talentVariation: Number.parseInt(document.getElementById("talentVariation").value, 10) || 0,
             clearContracts: document.getElementById("optClearContracts").checked
         };
     },
@@ -169,12 +180,13 @@ const App = {
     runRandomize() {
         const options = this.collectOptions();
         if (!this.state.drivers.length) return;
-        const noOptions = !Object.values(options).some(v => v);
+        const noOptions = !Object.values(options).some(v => typeof v === "boolean" && v);
         if (noOptions) {
             options.defaultStats = true;
         }
         try {
-            const { drivers, report } = window.Randomizer.process(this.state.drivers, options);
+            const sourceDrivers = this.state.result || this.state.drivers;
+            const { drivers, report } = window.Randomizer.process(sourceDrivers, options);
             this.state.result = drivers;
             this.renderDriversTable(drivers, "resultTable");
             this.showPanel("resultPanel");

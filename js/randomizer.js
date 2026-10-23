@@ -64,6 +64,13 @@ const Randomizer = {
         return this.randInt(window.GameData.TALENT_MIN, window.GameData.TALENT_MAX);
     },
 
+    randomTalentNear(talent, variation) {
+        const amount = Math.max(0, Math.floor(Number(variation) || 0));
+        const min = Math.max(window.GameData.TALENT_MIN, talent - amount);
+        const max = Math.min(window.GameData.TALENT_MAX, talent + amount);
+        return this.randInt(min, max);
+    },
+
     zeroHistory(driver) {
         if (!driver.history) driver.history = {};
         const fields = ["seasons", "championships", "wins", "podiums", "poles", "starts", "points"];
@@ -154,7 +161,10 @@ const Randomizer = {
                 report.tractionRandomized++;
             }
 
-            if (options.randomizeTalent) {
+            if (options.randomizeTalentNear) {
+                clone.talent = this.randomTalentNear(clone.talent, options.talentVariation);
+                report.talentRandomized++;
+            } else if (options.randomizeTalent) {
                 if (options.perAgeStats) {
                     const bracket = window.AgeConfig.findBracket(clone.age || 25);
                     clone.talent = this.randomTalentForBracket(bracket);
