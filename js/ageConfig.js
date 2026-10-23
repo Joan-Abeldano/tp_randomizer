@@ -30,8 +30,7 @@ const AgeConfig = {
             label: `Custom (${newMin}+)`,
             min: newMin,
             max: newMin + 5,
-            stats: { min: 5, max: 15 },
-            talent: { min: 50, max: 85 }
+            stats: { min: 5, max: 15 }
         });
     },
 

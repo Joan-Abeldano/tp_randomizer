@@ -30,7 +30,7 @@
                 <h2>Randomization Options</h2>
                 <div class="section-actions">
                     <button id="randomizeBtn" class="btn btn-primary" disabled>Randomize</button>
-                    <button id="downloadOriginalBtn" class="btn btn-secondary" disabled>Download Original</button>
+                    
                     <button id="resetBtn" class="btn btn-danger" disabled>Reset</button>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                         <button id="resetBracketsBtn" class="btn btn-secondary btn-sm">Reset</button>
                     </div>
                 </div>
-                <p class="hint">Configure min/max stat ranges per age bracket. Stats: 1-20. Talent: 1-99.</p>
+                <p class="hint">Configure min/max stat ranges per age bracket. Stats: 1-20.</p>
                 <div id="ageBrackets" class="brackets-list"></div>
             </div>
         </section>
@@ -63,7 +63,7 @@
     <section id="resultPanel" class="panel" style="display:none;">
         <div class="card">
             <div class="section-header">
-                <h2>Randomized Result</h2>
+                <h2 id="resultHeading">Randomized Result</h2>
                 <div class="section-actions">
                     <button id="downloadBtn" class="btn btn-primary" disabled>Download JSON</button>
                 </div>

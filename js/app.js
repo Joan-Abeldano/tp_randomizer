@@ -2,6 +2,7 @@ const App = {
     state: {
         drivers: [],
         result: null,
+        resultIsOriginal: false,
         fileName: "drivers.json"
     },
 
@@ -51,6 +52,8 @@ const App = {
             }
             this.state.drivers = data;
             this.state.fileName = file.name;
+            this.state.result = null;
+            this.state.resultIsOriginal = false;
             status.textContent = `Loaded ${data.length} drivers from ${file.name}`;
             status.className = "status success";
             this.showPanel("mainPanel");
@@ -93,11 +96,6 @@ const App = {
     bindActions() {
         document.getElementById("randomizeBtn").addEventListener("click", () => this.runRandomize());
         document.getElementById("downloadBtn").addEventListener("click", () => this.downloadResult());
-        document.getElementById("downloadOriginalBtn").addEventListener("click", () => {
-            if (this.state.drivers.length) {
-                window.FileHandler.downloadJSON(this.state.drivers, "original_" + this.state.fileName);
-            }
-        });
         document.getElementById("resetBtn").addEventListener("click", () => this.resetAll());
     },
 
@@ -123,12 +121,6 @@ const App = {
                     <span>-</span>
                     <input type="number" value="${b.stats.max}" data-field="statsMax" data-idx="${idx}" min="1" max="20">
                 </div>
-                <div class="bracket-stat">
-                    <label>Talent</label>
-                    <input type="number" value="${b.talent.min}" data-field="talentMin" data-idx="${idx}" min="1" max="99">
-                    <span>-</span>
-                    <input type="number" value="${b.talent.max}" data-field="talentMax" data-idx="${idx}" min="1" max="99">
-                </div>
                 <button class="btn-remove" data-idx="${idx}" ${brackets.length <= 1 ? "disabled" : ""}>x</button>
             `;
 
@@ -147,8 +139,6 @@ const App = {
                     case "max": bracket.max = val; break;
                     case "statsMin": bracket.stats.min = val; break;
                     case "statsMax": bracket.stats.max = val; break;
-                    case "talentMin": bracket.talent.min = val; break;
-                    case "talentMax": bracket.talent.max = val; break;
                 }
             });
         });
@@ -186,8 +176,10 @@ const App = {
         }
         try {
             const sourceDrivers = this.state.result || this.state.drivers;
-            const { drivers, report } = window.Randomizer.process(sourceDrivers, options);
+            const { drivers, report } = window.Randomizer.process(sourceDrivers, options, this.state.drivers);
             this.state.result = drivers;
+            this.state.resultIsOriginal = false;
+            document.getElementById("resultHeading").textContent = "Randomized Result";
             this.renderDriversTable(drivers, "resultTable");
             this.showPanel("resultPanel");
             this.updateButtonStates();
@@ -252,22 +244,22 @@ const App = {
 
     downloadResult() {
         if (!this.state.result) return;
-        const name = "randomized_" + this.state.fileName;
+        const prefix = this.state.resultIsOriginal ? "original_" : "randomized_";
+        const name = prefix + this.state.fileName;
         window.FileHandler.downloadJSON(this.state.result, name);
         this.showToast(`Downloaded ${name}`, "success");
     },
 
     resetAll() {
-        this.state.drivers = [];
-        this.state.result = null;
-        document.getElementById("resultTable").innerHTML = "";
-        document.getElementById("reportBox").innerHTML = "";
-        document.getElementById("uploadStatus").textContent = "";
-        document.getElementById("uploadStatus").className = "status";
-        document.getElementById("fileInput").value = "";
-        this.hidePanel("mainPanel");
-        this.hidePanel("resultPanel");
+        if (!this.state.drivers.length) return;
+        this.state.result = JSON.parse(JSON.stringify(this.state.drivers));
+        this.state.resultIsOriginal = true;
+        document.getElementById("resultHeading").textContent = "Original Drivers";
+        document.getElementById("reportBox").textContent = "Restored from the uploaded file.";
+        this.renderDriversTable(this.state.result, "resultTable");
+        this.showPanel("resultPanel");
         this.updateButtonStates();
+        this.showToast("Restored original driver data", "success");
     },
 
     showPanel(id) {
@@ -285,7 +277,6 @@ const App = {
         const hasResult = !!this.state.result;
         document.getElementById("randomizeBtn").disabled = !hasDrivers;
         document.getElementById("downloadBtn").disabled = !hasResult;
-        document.getElementById("downloadOriginalBtn").disabled = !hasDrivers;
         document.getElementById("resetBtn").disabled = !hasDrivers;
     },
 

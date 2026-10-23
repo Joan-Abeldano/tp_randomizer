@@ -52,10 +52,6 @@ const Randomizer = {
         return this.randInt(bracket.stats.min, bracket.stats.max);
     },
 
-    randomTalentForBracket(bracket) {
-        return this.randInt(bracket.talent.min, bracket.talent.max);
-    },
-
     randomPreference() {
         return this.randInt(window.GameData.PREF_MIN, window.GameData.PREF_MAX);
     },
@@ -107,7 +103,7 @@ const Randomizer = {
         }
     },
 
-    process(drivers, options) {
+    process(drivers, options, originalDrivers = drivers) {
         if (!Array.isArray(drivers)) {
             throw new Error("Expected an array of drivers");
         }
@@ -125,8 +121,9 @@ const Randomizer = {
             contractsCleared: 0
         };
 
-        const result = drivers.map(driver => {
+        const result = drivers.map((driver, index) => {
             const clone = JSON.parse(JSON.stringify(driver));
+            const originalTalent = originalDrivers[index]?.talent ?? driver.talent;
 
             if (options.perAgeStats) {
                 this.randomizeStatsForAge(clone);
@@ -162,15 +159,10 @@ const Randomizer = {
             }
 
             if (options.randomizeTalentNear) {
-                clone.talent = this.randomTalentNear(clone.talent, options.talentVariation);
+                clone.talent = this.randomTalentNear(originalTalent, options.talentVariation);
                 report.talentRandomized++;
             } else if (options.randomizeTalent) {
-                if (options.perAgeStats) {
-                    const bracket = window.AgeConfig.findBracket(clone.age || 25);
-                    clone.talent = this.randomTalentForBracket(bracket);
-                } else {
-                    clone.talent = this.randomTalent();
-                }
+                clone.talent = this.randomTalent();
                 report.talentRandomized++;
             }
 

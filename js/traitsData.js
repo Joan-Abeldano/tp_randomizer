@@ -59,12 +59,12 @@ const PREF_MIN = 0;
 const PREF_MAX = 100;
 
 const DEFAULT_AGE_BRACKETS = [
-    { label: "Junior (<18)", min: 0, max: 17, stats: { min: 1, max: 10 }, talent: { min: 40, max: 85 } },
-    { label: "Rookie (18-22)", min: 18, max: 22, stats: { min: 5, max: 13 }, talent: { min: 55, max: 90 } },
-    { label: "Racer (23-27)", min: 23, max: 27, stats: { min: 10, max: 16 }, talent: { min: 60, max: 92 } },
-    { label: "Peak (28-32)", min: 28, max: 32, stats: { min: 12, max: 18 }, talent: { min: 65, max: 95 } },
-    { label: "Veteran (33-37)", min: 33, max: 37, stats: { min: 10, max: 15 }, talent: { min: 55, max: 88 } },
-    { label: "Old (38+)", min: 38, max: 200, stats: { min: 7, max: 14 }, talent: { min: 50, max: 82 } }
+    { label: "Junior (<18)", min: 0, max: 17, stats: { min: 1, max: 10 } },
+    { label: "Rookie (18-22)", min: 18, max: 22, stats: { min: 5, max: 13 } },
+    { label: "Racer (23-27)", min: 23, max: 27, stats: { min: 10, max: 16 } },
+    { label: "Peak (28-32)", min: 28, max: 32, stats: { min: 12, max: 18 } },
+    { label: "Veteran (33-37)", min: 33, max: 37, stats: { min: 10, max: 15 } },
+    { label: "Old (38+)", min: 38, max: 200, stats: { min: 7, max: 14 } }
 ];
 
 window.GameData = {
