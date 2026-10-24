@@ -76,6 +76,7 @@ const Randomizer = {
     },
 
     clearContracts(driver) {
+        driver.team = null;
         if (driver.contract) {
             driver.contract = {
                 team: null,
