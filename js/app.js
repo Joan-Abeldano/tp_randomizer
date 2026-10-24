@@ -97,6 +97,9 @@ const App = {
         document.getElementById("randomizeBtn").addEventListener("click", () => this.runRandomize());
         document.getElementById("downloadBtn").addEventListener("click", () => this.downloadResult());
         document.getElementById("resetBtn").addEventListener("click", () => this.resetAll());
+        document.getElementById("showResultTable").addEventListener("change", (event) => {
+            document.getElementById("resultTable").hidden = !event.target.checked;
+        });
     },
 
     renderAgeBrackets() {
@@ -183,8 +186,21 @@ const App = {
             this.renderDriversTable(drivers, "resultTable");
             this.showPanel("resultPanel");
             this.updateButtonStates();
+            const changes = [
+                [report.statsRandomized, "age-based stats randomized"],
+                [report.defaultStats, "stats randomized (1-20)"],
+                [report.traitsRandomized, "trait sets randomized"],
+                [report.personalitiesRandomized, "personalities randomized"],
+                [report.historyZeroed, "history records zeroed"],
+                [report.balanceRandomized, "balance preferences randomized"],
+                [report.tractionRandomized, "traction preferences randomized"],
+                [report.talentRandomized, "talent values randomized"],
+                [report.contractsCleared, "contracts cleared"]
+            ].filter(([count]) => count > 0)
+                .map(([count, label]) => `${count} ${label}`);
+            const summary = changes.length ? `Changes: ${changes.join(", ")}` : "No driver changes were made.";
             this.showToast(
-                noOptions ? "Randomized stats 1-20 (default)" : "Randomization complete",
+                `Randomization complete\n${report.processed} of ${report.total} drivers processed\n${summary}`,
                 "success"
             );
         } catch (err) {
@@ -294,7 +310,7 @@ const App = {
         clearTimeout(this._toastTimer);
         this._toastTimer = setTimeout(() => {
             toast.className = "toast";
-        }, 3000);
+        }, 5000);
     }
 };
 

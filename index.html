@@ -65,11 +65,12 @@
             <div class="section-header">
                 <h2 id="resultHeading">Randomized Result</h2>
                 <div class="section-actions">
+                    <label class="result-visibility"><input type="checkbox" id="showResultTable" aria-controls="resultTable"> <span>Show result table</span></label>
                     <button id="downloadBtn" class="btn btn-primary" disabled>Download JSON</button>
                 </div>
             </div>
             <div id="reportBox" class="report-box"></div>
-            <div id="resultTable"></div>
+            <div id="resultTable" hidden></div>
         </div>
     </section>
 
@@ -78,7 +79,7 @@
     </footer>
 </div>
 
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script src="js/traitsData.js"></script>
 <script src="js/ageConfig.js"></script>
