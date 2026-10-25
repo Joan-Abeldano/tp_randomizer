@@ -153,6 +153,10 @@ body {
     font-size: 14px;
 }
 
+.stat-range-opt {
+    flex-wrap: wrap;
+}
+
 .opt:hover {
     border-color: var(--primary);
 }

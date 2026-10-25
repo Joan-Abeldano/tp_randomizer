@@ -36,6 +36,7 @@
 			</div>
 			<div class="options-grid">
 				<label class="opt"><input type="checkbox" id="randomizeStats"> <span>Randomize stats (1-100)</span></label>
+				<label class="opt stat-range-opt"><input type="checkbox" id="randomizeStatsRange"> <span>Randomize stats</span><span>from</span><input type="number" id="statsRangeMin" min="1" max="100" value="1" aria-label="Minimum randomized stat"><span>to</span><input type="number" id="statsRangeMax" min="1" max="100" value="100" aria-label="Maximum randomized stat"></label>
 				<label class="opt"><input type="checkbox" id="statsNearOriginal"> <span>Stats +/-</span><input type="number" id="statsVariation" min="0" max="99" value="10" aria-label="Stats variation from original"><span>from original</span></label>
 				<label class="opt"><input type="checkbox" id="randomizePotential"> <span>Randomize starting potential (1-100)</span></label>
 				<label class="opt"><input type="checkbox" id="potentialNearOriginal"> <span>Potential +/-</span><input type="number" id="potentialVariation" min="0" max="99" value="10" aria-label="Potential variation from original"><span>from original</span></label>
@@ -51,12 +52,12 @@
 			<div class="section-header">
 				<h2 id="resultHeading">Randomized Teams</h2>
 				<div class="section-actions">
-					<label class="result-visibility"><input type="checkbox" id="showResultTable" aria-controls="resultTable" checked> <span>Show result table</span></label>
+					<label class="result-visibility"><input type="checkbox" id="showResultTable" aria-controls="resultTable"> <span>Show result table</span></label>
 					<button id="downloadBtn" class="btn btn-primary" disabled>Download JSON</button>
 				</div>
 			</div>
 			<div id="reportBox" class="report-box"></div>
-			<div id="resultTable"></div>
+			<div id="resultTable" hidden></div>
 		</div>
 	</section>
 

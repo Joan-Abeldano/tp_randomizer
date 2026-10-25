@@ -13,15 +13,15 @@ const App = {
     },
 
     bindOptions() {
-        [["randomizeStats", "statsNearOriginal"], ["randomizePotential", "potentialNearOriginal"]]
-            .forEach(([fullId, nearId]) => {
-                const full = document.getElementById(fullId);
-                const near = document.getElementById(nearId);
-                full.addEventListener("change", () => {
-                    if (full.checked) near.checked = false;
-                });
-                near.addEventListener("change", () => {
-                    if (near.checked) full.checked = false;
+        [["randomizeStats", "randomizeStatsRange", "statsNearOriginal"], ["randomizePotential", "potentialNearOriginal"]]
+            .forEach(optionIds => {
+                optionIds.forEach(optionId => {
+                    const option = document.getElementById(optionId);
+                    option.addEventListener("change", () => {
+                        if (!option.checked) return;
+                        optionIds.filter(id => id !== optionId)
+                            .forEach(id => { document.getElementById(id).checked = false; });
+                    });
                 });
             });
     },
@@ -81,6 +81,9 @@ const App = {
     collectOptions() {
         return {
             randomizeStats: document.getElementById("randomizeStats").checked,
+            randomizeStatsRange: document.getElementById("randomizeStatsRange").checked,
+            statsRangeMin: Number(document.getElementById("statsRangeMin").value),
+            statsRangeMax: Number(document.getElementById("statsRangeMax").value),
             statsNearOriginal: document.getElementById("statsNearOriginal").checked,
             statsVariation: Number.parseInt(document.getElementById("statsVariation").value, 10) || 0,
             randomizePotential: document.getElementById("randomizePotential").checked,
@@ -93,6 +96,16 @@ const App = {
 
     runRandomize() {
         const options = this.collectOptions();
+        if (options.randomizeStatsRange && (
+            !Number.isInteger(options.statsRangeMin) ||
+            !Number.isInteger(options.statsRangeMax) ||
+            options.statsRangeMin < 1 ||
+            options.statsRangeMax > 100 ||
+            options.statsRangeMin > options.statsRangeMax
+        )) {
+            this.showToast("Enter a valid stat range from 1 to 100", "error");
+            return;
+        }
         if (!Object.values(options).some(value => typeof value === "boolean" && value)) {
             this.showToast("Select at least one randomization option", "error");
             return;

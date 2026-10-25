@@ -40,11 +40,13 @@ const TeamRandomizer = {
 
             for (const { stat, potential } of window.TeamData.fields) {
                 const statValue = this.getValue(team, stat);
-                if ((options.randomizeStats || options.statsNearOriginal) && typeof statValue === "number") {
+                if ((options.randomizeStats || options.randomizeStatsRange || options.statsNearOriginal) && typeof statValue === "number") {
                     const originalStat = this.getValue(original, stat);
                     const value = options.statsNearOriginal
                         ? this.randomNear(typeof originalStat === "number" ? originalStat : statValue, options.statsVariation)
-                        : this.randomInt(1, 100);
+                        : options.randomizeStatsRange
+                            ? this.randomInt(options.statsRangeMin, options.statsRangeMax)
+                            : this.randomInt(1, 100);
                     this.setValue(team, stat, value);
                     if (stat[0] === "aero_efficiency_rating" && typeof team.aero?.efficiency_rating === "number") {
                         team.aero.efficiency_rating = value;
@@ -68,7 +70,7 @@ const TeamRandomizer = {
                         : this.randomInt(minimum, 100);
                     this.setValue(team, potential, value);
                     report.potential++;
-                } else if ((options.randomizeStats || options.statsNearOriginal || options.randomizePotential || options.potentialNearOriginal) && potentialValue < minimum) {
+                } else if ((options.randomizeStats || options.randomizeStatsRange || options.statsNearOriginal || options.randomizePotential || options.potentialNearOriginal) && potentialValue < minimum) {
                     this.setValue(team, potential, Math.min(100, minimum));
                     report.potentialAdjusted++;
                 }
