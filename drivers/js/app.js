@@ -157,6 +157,7 @@ const App = {
 
     collectOptions() {
         return {
+            defaultStats: document.getElementById("optDefaultStats").checked,
             perAgeStats: document.getElementById("optPerAge").checked,
             randomizeTraits: document.getElementById("optTraits").checked,
             randomizePersonalities: document.getElementById("optPersonalities").checked,
@@ -173,9 +174,9 @@ const App = {
     runRandomize() {
         const options = this.collectOptions();
         if (!this.state.drivers.length) return;
-        const noOptions = !Object.values(options).some(v => typeof v === "boolean" && v);
-        if (noOptions) {
-            options.defaultStats = true;
+        if (!Object.values(options).some(value => typeof value === "boolean" && value)) {
+            this.showToast("Select at least one randomization option", "error");
+            return;
         }
         try {
             const sourceDrivers = this.state.result || this.state.drivers;
