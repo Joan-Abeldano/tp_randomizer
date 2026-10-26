@@ -1,0 +1,5 @@
+@import url("../../teams/css/styles.css");
+
+.range-opt {
+    flex-wrap: wrap;
+}

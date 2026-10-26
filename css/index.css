@@ -193,6 +193,10 @@ h1 {
     box-shadow: inset 3px 0 0 #e1aa55;
 }
 
+.engine-card {
+    box-shadow: inset 3px 0 0 #df7164;
+}
+
 .card-meta,
 .card-bottom {
     display: flex;
@@ -275,6 +279,10 @@ h1 {
 
 .staff-card .link-arrow {
     color: #e1aa55;
+}
+
+.engine-card .link-arrow {
+    color: #df7164;
 }
 
 .tool-link:hover .link-arrow {
