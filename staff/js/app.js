@@ -42,7 +42,11 @@ const App = {
             if (!Array.isArray(staff) || staff.some(person => !person || typeof person !== "object" || Array.isArray(person))) {
                 throw new Error("JSON root must be an array of staff objects");
             }
-            this.state.staff = staff;
+            this.state.staff = staff.map(person => {
+                const cleanPerson = { ...person };
+                delete cleanPerson.skill;
+                return cleanPerson;
+            });
             this.state.result = null;
             this.state.resultIsOriginal = false;
             this.state.fileName = file.name;
@@ -73,9 +77,6 @@ const App = {
             randomizeTalent: document.getElementById("randomizeTalent").checked,
             talentMin: document.getElementById("talentMin").valueAsNumber,
             talentMax: document.getElementById("talentMax").valueAsNumber,
-            randomizeOverallSkill: document.getElementById("randomizeOverallSkill").checked,
-            overallSkillMin: document.getElementById("overallSkillMin").valueAsNumber,
-            overallSkillMax: document.getElementById("overallSkillMax").valueAsNumber,
             clearContracts: document.getElementById("clearContracts").checked
         };
     },
@@ -85,8 +86,7 @@ const App = {
         if (!this.state.staff.length) return;
         const ranges = [
             [options.randomizeSkills, options.skillsMin, options.skillsMax, "skills"],
-            [options.randomizeTalent, options.talentMin, options.talentMax, "talent"],
-            [options.randomizeOverallSkill, options.overallSkillMin, options.overallSkillMax, "overall skill"]
+            [options.randomizeTalent, options.talentMin, options.talentMax, "talent"]
         ];
         const invalidRange = ranges.find(([enabled, min, max]) => enabled && (
             !Number.isInteger(min) ||
@@ -99,7 +99,7 @@ const App = {
             this.showToast(`Enter a valid ${invalidRange[3]} range from 1 to 20`, "error");
             return;
         }
-        if (![options.randomizeSkills, options.randomizeTalent, options.randomizeOverallSkill, options.clearContracts].some(Boolean)) {
+        if (![options.randomizeSkills, options.randomizeTalent, options.clearContracts].some(Boolean)) {
             this.showToast("Select at least one randomization option", "error");
             return;
         }
@@ -123,7 +123,6 @@ const App = {
         const changes = [
             [report.skills, `staff skill sets randomized (${options.skillsMin}-${options.skillsMax})`],
             [report.talent, `staff talent sets randomized (${options.talentMin}-${options.talentMax})`],
-            [report.overallSkill, `overall skill ratings randomized (${options.overallSkillMin}-${options.overallSkillMax})`],
             [report.contractsCleared, "staff contracts cleared"]
         ].filter(([count]) => count > 0).map(([count, label]) => `${count} ${label}`);
         const summary = changes.length ? `Changes: ${changes.join(", ")}` : "No matching staff fields were available for the selected options.";
@@ -141,7 +140,6 @@ const App = {
             <td>${this.escape(person.name || "-")}</td>
             <td>${this.escape(person.role || "-")}</td>
             <td>${this.escape(person.team || "-")}</td>
-            <td>${this.escape(person.skill ?? "-")}</td>
             <td>${this.formatFields(person.skills)}</td>
             <td>${this.formatFields(person.talent)}</td>
             <td>${this.escape(person.contract?.team ?? "-")}</td>
@@ -150,7 +148,7 @@ const App = {
             <div class="table-wrap">
                 <table>
                     <thead><tr>
-                        <th>Name</th><th>Role</th><th>Team</th><th>Overall</th>
+                        <th>Name</th><th>Role</th><th>Team</th>
                         <th>Skills</th><th>Talent</th><th>Contract team</th>
                     </tr></thead>
                     <tbody>${rows}</tbody>

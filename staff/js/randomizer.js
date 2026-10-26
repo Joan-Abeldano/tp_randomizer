@@ -35,12 +35,12 @@ const StaffRandomizer = {
             processed: sourceStaff.length,
             skills: 0,
             talent: 0,
-            overallSkill: 0,
             contractsCleared: 0
         };
 
         const staff = sourceStaff.map(person => {
             const clone = JSON.parse(JSON.stringify(person));
+            delete clone.skill;
 
             if (options.randomizeSkills && clone.skills && typeof clone.skills === "object" && !Array.isArray(clone.skills)) {
                 this.randomizeFields(clone.skills, options.skillsMin, options.skillsMax);
@@ -49,10 +49,6 @@ const StaffRandomizer = {
             if (options.randomizeTalent && clone.talent && typeof clone.talent === "object" && !Array.isArray(clone.talent)) {
                 this.randomizeFields(clone.talent, options.talentMin, options.talentMax);
                 report.talent++;
-            }
-            if (options.randomizeOverallSkill && typeof clone.skill === "number" && Number.isFinite(clone.skill)) {
-                clone.skill = this.randInt(options.overallSkillMin, options.overallSkillMax);
-                report.overallSkill++;
             }
             if (options.clearContracts) {
                 this.clearContracts(clone);
