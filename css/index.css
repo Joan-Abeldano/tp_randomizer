@@ -189,6 +189,10 @@ h1 {
     box-shadow: inset 3px 0 0 var(--green);
 }
 
+.staff-card {
+    box-shadow: inset 3px 0 0 #e1aa55;
+}
+
 .card-meta,
 .card-bottom {
     display: flex;
@@ -267,6 +271,10 @@ h1 {
 
 .team-card .link-arrow {
     color: var(--green);
+}
+
+.staff-card .link-arrow {
+    color: #e1aa55;
 }
 
 .tool-link:hover .link-arrow {

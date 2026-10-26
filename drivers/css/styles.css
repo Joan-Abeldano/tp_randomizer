@@ -153,6 +153,10 @@ body {
     font-size: 14px;
 }
 
+.opt-range {
+    flex-wrap: wrap;
+}
+
 .opt:hover {
     border-color: var(--primary);
 }

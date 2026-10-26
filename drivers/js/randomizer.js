@@ -52,12 +52,12 @@ const Randomizer = {
         return this.randInt(bracket.stats.min, bracket.stats.max);
     },
 
-    randomPreference() {
-        return this.randInt(window.GameData.PREF_MIN, window.GameData.PREF_MAX);
+    randomPreference(min, max) {
+        return this.randInt(min, max);
     },
 
-    randomTalent() {
-        return this.randInt(window.GameData.TALENT_MIN, window.GameData.TALENT_MAX);
+    randomTalent(min, max) {
+        return this.randInt(min, max);
     },
 
     randomTalentNear(talent, variation) {
@@ -98,9 +98,9 @@ const Randomizer = {
         return bracket;
     },
 
-    randomizeStatsFlat(driver) {
+    randomizeStatsFlat(driver, min, max) {
         for (const stat of window.GameData.STATS_FIELDS) {
-            driver[stat] = this.randInt(window.GameData.STAT_MIN, window.GameData.STAT_MAX);
+            driver[stat] = this.randInt(min, max);
         }
     },
 
@@ -146,7 +146,7 @@ const Randomizer = {
                 this.randomizeStatsOverall(clone, options.overallMin, options.overallMax);
                 report.overallStatsRandomized++;
             } else if (options.defaultStats) {
-                this.randomizeStatsFlat(clone);
+                this.randomizeStatsFlat(clone, options.statsMin, options.statsMax);
                 report.defaultStats++;
             }
 
@@ -166,12 +166,12 @@ const Randomizer = {
             }
 
             if (options.randomizeBalance) {
-                clone.balance_preference = this.randomPreference();
+                clone.balance_preference = this.randomPreference(options.balanceMin, options.balanceMax);
                 report.balanceRandomized++;
             }
 
             if (options.randomizeTraction) {
-                clone.traction_preference = this.randomPreference();
+                clone.traction_preference = this.randomPreference(options.tractionMin, options.tractionMax);
                 report.tractionRandomized++;
             }
 
@@ -179,7 +179,7 @@ const Randomizer = {
                 clone.talent = this.randomTalentNear(originalTalent, options.talentVariation);
                 report.talentRandomized++;
             } else if (options.randomizeTalent) {
-                clone.talent = this.randomTalent();
+                clone.talent = this.randomTalent(options.talentMin, options.talentMax);
                 report.talentRandomized++;
             }
 

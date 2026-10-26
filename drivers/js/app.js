@@ -170,6 +170,8 @@ const App = {
     collectOptions() {
         return {
             defaultStats: document.getElementById("optDefaultStats").checked,
+            statsMin: document.getElementById("statsMin").valueAsNumber,
+            statsMax: document.getElementById("statsMax").valueAsNumber,
             perAgeStats: document.getElementById("optPerAge").checked,
             overallStats: document.getElementById("optOverallStats").checked,
             overallMin: document.getElementById("overallMin").valueAsNumber,
@@ -178,8 +180,14 @@ const App = {
             randomizePersonalities: document.getElementById("optPersonalities").checked,
             zeroHistory: document.getElementById("optZeroHistory").checked,
             randomizeBalance: document.getElementById("optBalance").checked,
+            balanceMin: document.getElementById("balanceMin").valueAsNumber,
+            balanceMax: document.getElementById("balanceMax").valueAsNumber,
             randomizeTraction: document.getElementById("optTraction").checked,
+            tractionMin: document.getElementById("tractionMin").valueAsNumber,
+            tractionMax: document.getElementById("tractionMax").valueAsNumber,
             randomizeTalent: document.getElementById("optTalent").checked,
+            talentMin: document.getElementById("talentMin").valueAsNumber,
+            talentMax: document.getElementById("talentMax").valueAsNumber,
             randomizeTalentNear: document.getElementById("optTalentNear").checked,
             talentVariation: Number.parseInt(document.getElementById("talentVariation").value, 10) || 0,
             clearContracts: document.getElementById("optClearContracts").checked
@@ -189,6 +197,23 @@ const App = {
     runRandomize() {
         const options = this.collectOptions();
         if (!this.state.drivers.length) return;
+        const customRanges = [
+            [options.defaultStats, options.statsMin, options.statsMax, window.GameData.STAT_MIN, window.GameData.STAT_MAX, "stats"],
+            [options.randomizeBalance, options.balanceMin, options.balanceMax, window.GameData.PREF_MIN, window.GameData.PREF_MAX, "balance_preference"],
+            [options.randomizeTraction, options.tractionMin, options.tractionMax, window.GameData.PREF_MIN, window.GameData.PREF_MAX, "traction_preference"],
+            [options.randomizeTalent, options.talentMin, options.talentMax, window.GameData.TALENT_MIN, window.GameData.TALENT_MAX, "talent"]
+        ];
+        const invalidRange = customRanges.find(([enabled, min, max, allowedMin, allowedMax]) => enabled && (
+            !Number.isInteger(min) ||
+            !Number.isInteger(max) ||
+            min < allowedMin ||
+            max > allowedMax ||
+            min > max
+        ));
+        if (invalidRange) {
+            this.showToast(`Enter a valid ${invalidRange[5]} range from ${invalidRange[3]} to ${invalidRange[4]}`, "error");
+            return;
+        }
         if (options.overallStats && (
             !Number.isInteger(options.overallMin) ||
             !Number.isInteger(options.overallMax) ||
@@ -214,14 +239,14 @@ const App = {
             this.updateButtonStates();
             const changes = [
                 [report.statsRandomized, "age-based stats randomized"],
-                [report.defaultStats, "stats randomized (1-20)"],
+                [report.defaultStats, `stats randomized (${options.statsMin}-${options.statsMax})`],
                 [report.overallStatsRandomized, `overalls randomized (${options.overallMin}-${options.overallMax})`],
                 [report.traitsRandomized, "trait sets randomized"],
                 [report.personalitiesRandomized, "personalities randomized"],
                 [report.historyZeroed, "history records zeroed"],
-                [report.balanceRandomized, "balance preferences randomized"],
-                [report.tractionRandomized, "traction preferences randomized"],
-                [report.talentRandomized, "talent values randomized"],
+                [report.balanceRandomized, `balance preferences randomized (${options.balanceMin}-${options.balanceMax})`],
+                [report.tractionRandomized, `traction preferences randomized (${options.tractionMin}-${options.tractionMax})`],
+                [report.talentRandomized, `talent values randomized (${options.talentMin}-${options.talentMax})`],
                 [report.contractsCleared, "contracts cleared"]
             ].filter(([count]) => count > 0)
                 .map(([count, label]) => `${count} ${label}`);

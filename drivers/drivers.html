@@ -36,15 +36,15 @@
                 </div>
             </div>
             <div class="options-grid">
-                <label class="opt"><input type="checkbox" id="optDefaultStats"> <span>Randomize stats (1-20)</span></label>
+                <label class="opt opt-range"><input type="checkbox" id="optDefaultStats"> <span>Randomize stats</span><span>from</span><input type="number" id="statsMin" min="1" max="20" step="1" value="1" aria-label="Minimum randomized stat"><span>to</span><input type="number" id="statsMax" min="1" max="20" step="1" value="20" aria-label="Maximum randomized stat"></label>
                 <label class="opt"><input type="checkbox" id="optPerAge"> <span>Per-age stat randomization</span></label>
                 <label class="opt"><input type="checkbox" id="optOverallStats"> <span>Randomize overall</span><span>from</span><input type="number" id="overallMin" min="5" max="100" value="5" aria-label="Minimum overall"><span>to</span><input type="number" id="overallMax" min="5" max="100" value="100" aria-label="Maximum overall"></label>
                 <label class="opt"><input type="checkbox" id="optTraits"> <span>Randomize traits</span></label>
                 <label class="opt"><input type="checkbox" id="optPersonalities"> <span>Randomize personalities</span></label>
                 <label class="opt"><input type="checkbox" id="optZeroHistory"> <span>Set history to zeros</span></label>
-                <label class="opt"><input type="checkbox" id="optBalance"> <span>Randomize balance_preference</span></label>
-                <label class="opt"><input type="checkbox" id="optTraction"> <span>Randomize traction_preference</span></label>
-                <label class="opt"><input type="checkbox" id="optTalent"> <span>Randomize talent</span></label>
+                <label class="opt opt-range"><input type="checkbox" id="optBalance"> <span>Randomize balance_preference</span><span>from</span><input type="number" id="balanceMin" min="0" max="100" step="1" value="0" aria-label="Minimum balance preference"><span>to</span><input type="number" id="balanceMax" min="0" max="100" step="1" value="100" aria-label="Maximum balance preference"></label>
+                <label class="opt opt-range"><input type="checkbox" id="optTraction"> <span>Randomize traction_preference</span><span>from</span><input type="number" id="tractionMin" min="0" max="100" step="1" value="0" aria-label="Minimum traction preference"><span>to</span><input type="number" id="tractionMax" min="0" max="100" step="1" value="100" aria-label="Maximum traction preference"></label>
+                <label class="opt opt-range"><input type="checkbox" id="optTalent"> <span>Randomize talent</span><span>from</span><input type="number" id="talentMin" min="1" max="99" step="1" value="1" aria-label="Minimum randomized talent"><span>to</span><input type="number" id="talentMax" min="1" max="99" step="1" value="99" aria-label="Maximum randomized talent"></label>
                 <label class="opt"><input type="checkbox" id="optTalentNear"> <span>Randomize talent +-</span><input type="number" id="talentVariation" min="0" max="98" step="1" value="10" aria-label="Talent variation in points"><span>from original</span></label>
                 <label class="opt"><input type="checkbox" id="optClearContracts"> <span>Clear contracts</span></label>
             </div>
