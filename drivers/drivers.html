@@ -37,6 +37,7 @@
             </div>
             <div class="options-grid">
                 <label class="opt opt-range"><input type="checkbox" id="optDefaultStats"> <span>Randomize stats</span><span>from</span><input type="number" id="statsMin" min="1" max="20" step="1" value="1" aria-label="Minimum randomized stat"><span>to</span><input type="number" id="statsMax" min="1" max="20" step="1" value="20" aria-label="Maximum randomized stat"></label>
+                <label class="opt"><input type="checkbox" id="optIndividualStats"> <span>Randomize stats individually</span></label>
                 <label class="opt"><input type="checkbox" id="optPerAge"> <span>Per-age stat randomization</span></label>
                 <label class="opt"><input type="checkbox" id="optOverallStats"> <span>Randomize overall</span><span>from</span><input type="number" id="overallMin" min="5" max="100" value="5" aria-label="Minimum overall"><span>to</span><input type="number" id="overallMax" min="5" max="100" value="100" aria-label="Maximum overall"></label>
                 <label class="opt"><input type="checkbox" id="optTraits"> <span>Randomize traits</span></label>
@@ -47,6 +48,14 @@
                 <label class="opt opt-range"><input type="checkbox" id="optTalent"> <span>Randomize talent</span><span>from</span><input type="number" id="talentMin" min="1" max="99" step="1" value="1" aria-label="Minimum randomized talent"><span>to</span><input type="number" id="talentMax" min="1" max="99" step="1" value="99" aria-label="Maximum randomized talent"></label>
                 <label class="opt"><input type="checkbox" id="optTalentNear"> <span>Randomize talent +-</span><input type="number" id="talentVariation" min="0" max="98" step="1" value="10" aria-label="Talent variation in points"><span>from original</span></label>
                 <label class="opt"><input type="checkbox" id="optClearContracts"> <span>Clear contracts</span></label>
+            </div>
+
+            <div id="individualStatsOptions" class="options-grid" hidden>
+                <label class="opt opt-range"><input type="checkbox" id="optCornering"> <span>Cornering</span><span>from</span><input type="number" id="corneringMin" min="1" max="20" step="1" value="1" aria-label="Minimum cornering"><span>to</span><input type="number" id="corneringMax" min="1" max="20" step="1" value="20" aria-label="Maximum cornering"></label>
+                <label class="opt opt-range"><input type="checkbox" id="optBraking"> <span>Braking</span><span>from</span><input type="number" id="brakingMin" min="1" max="20" step="1" value="1" aria-label="Minimum braking"><span>to</span><input type="number" id="brakingMax" min="1" max="20" step="1" value="20" aria-label="Maximum braking"></label>
+                <label class="opt opt-range"><input type="checkbox" id="optConsistency"> <span>Consistency</span><span>from</span><input type="number" id="consistencyMin" min="1" max="20" step="1" value="1" aria-label="Minimum consistency"><span>to</span><input type="number" id="consistencyMax" min="1" max="20" step="1" value="20" aria-label="Maximum consistency"></label>
+                <label class="opt opt-range"><input type="checkbox" id="optSmoothness"> <span>Smoothness</span><span>from</span><input type="number" id="smoothnessMin" min="1" max="20" step="1" value="1" aria-label="Minimum smoothness"><span>to</span><input type="number" id="smoothnessMax" min="1" max="20" step="1" value="20" aria-label="Maximum smoothness"></label>
+                <label class="opt opt-range"><input type="checkbox" id="optControl"> <span>Control</span><span>from</span><input type="number" id="controlMin" min="1" max="20" step="1" value="1" aria-label="Minimum control"><span>to</span><input type="number" id="controlMax" min="1" max="20" step="1" value="20" aria-label="Maximum control"></label>
             </div>
 
             <div id="ageBracketsSection" class="age-section" style="display:none;">

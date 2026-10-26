@@ -77,6 +77,12 @@ const App = {
             });
         });
 
+        const individualStatsOption = document.getElementById("optIndividualStats");
+        const individualStatsOptions = document.getElementById("individualStatsOptions");
+        individualStatsOption.addEventListener("change", () => {
+            individualStatsOptions.hidden = !individualStatsOption.checked;
+        });
+
         const perAge = document.getElementById("optPerAge");
         const ageSection = document.getElementById("ageBracketsSection");
         perAge.addEventListener("change", () => {
@@ -168,10 +174,18 @@ const App = {
     },
 
     collectOptions() {
+        const individualStatsEnabled = document.getElementById("optIndividualStats").checked;
+        const individualStats = Object.fromEntries(window.GameData.STATS_FIELDS.map(stat => [stat, {
+            enabled: individualStatsEnabled && document.getElementById(`opt${stat[0].toUpperCase()}${stat.slice(1)}`).checked,
+            min: document.getElementById(`${stat}Min`).valueAsNumber,
+            max: document.getElementById(`${stat}Max`).valueAsNumber
+        }]));
         return {
             defaultStats: document.getElementById("optDefaultStats").checked,
             statsMin: document.getElementById("statsMin").valueAsNumber,
             statsMax: document.getElementById("statsMax").valueAsNumber,
+            randomizeIndividualStats: individualStatsEnabled && Object.values(individualStats).some(range => range.enabled),
+            individualStats,
             perAgeStats: document.getElementById("optPerAge").checked,
             overallStats: document.getElementById("optOverallStats").checked,
             overallMin: document.getElementById("overallMin").valueAsNumber,
@@ -197,12 +211,19 @@ const App = {
     runRandomize() {
         const options = this.collectOptions();
         if (!this.state.drivers.length) return;
+        if (document.getElementById("optIndividualStats").checked && !options.randomizeIndividualStats) {
+            this.showToast("Select at least one stat to randomize individually", "error");
+            return;
+        }
         const customRanges = [
             [options.defaultStats, options.statsMin, options.statsMax, window.GameData.STAT_MIN, window.GameData.STAT_MAX, "stats"],
             [options.randomizeBalance, options.balanceMin, options.balanceMax, window.GameData.PREF_MIN, window.GameData.PREF_MAX, "balance_preference"],
             [options.randomizeTraction, options.tractionMin, options.tractionMax, window.GameData.PREF_MIN, window.GameData.PREF_MAX, "traction_preference"],
             [options.randomizeTalent, options.talentMin, options.talentMax, window.GameData.TALENT_MIN, window.GameData.TALENT_MAX, "talent"]
         ];
+        for (const [stat, range] of Object.entries(options.individualStats)) {
+            customRanges.push([range.enabled, range.min, range.max, window.GameData.STAT_MIN, window.GameData.STAT_MAX, stat]);
+        }
         const invalidRange = customRanges.find(([enabled, min, max, allowedMin, allowedMax]) => enabled && (
             !Number.isInteger(min) ||
             !Number.isInteger(max) ||
@@ -240,6 +261,7 @@ const App = {
             const changes = [
                 [report.statsRandomized, "age-based stats randomized"],
                 [report.defaultStats, `stats randomized (${options.statsMin}-${options.statsMax})`],
+                [report.individualStatsRandomized, "drivers had individual stats randomized"],
                 [report.overallStatsRandomized, `overalls randomized (${options.overallMin}-${options.overallMax})`],
                 [report.traitsRandomized, "trait sets randomized"],
                 [report.personalitiesRandomized, "personalities randomized"],

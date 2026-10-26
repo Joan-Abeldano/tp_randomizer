@@ -140,6 +140,10 @@ body {
     margin-bottom: 20px;
 }
 
+.options-grid[hidden] {
+    display: none;
+}
+
 .opt {
     display: flex;
     align-items: center;

@@ -104,6 +104,14 @@ const Randomizer = {
         }
     },
 
+    randomizeIndividualStats(driver, ranges) {
+        for (const [stat, range] of Object.entries(ranges)) {
+            if (range.enabled) {
+                driver[stat] = this.randInt(range.min, range.max);
+            }
+        }
+    },
+
     randomizeStatsOverall(driver, minOverall, maxOverall) {
         let remaining = this.randInt(minOverall, maxOverall);
         const stats = window.GameData.STATS_FIELDS;
@@ -125,6 +133,7 @@ const Randomizer = {
             processed: 0,
             statsRandomized: 0,
             defaultStats: 0,
+            individualStatsRandomized: 0,
             overallStatsRandomized: 0,
             traitsRandomized: 0,
             personalitiesRandomized: 0,
@@ -148,6 +157,11 @@ const Randomizer = {
             } else if (options.defaultStats) {
                 this.randomizeStatsFlat(clone, options.statsMin, options.statsMax);
                 report.defaultStats++;
+            }
+
+            if (options.randomizeIndividualStats) {
+                this.randomizeIndividualStats(clone, options.individualStats);
+                report.individualStatsRandomized++;
             }
 
             if (options.randomizeTraits) {
