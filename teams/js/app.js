@@ -90,12 +90,22 @@ const App = {
             potentialNearOriginal: document.getElementById("potentialNearOriginal").checked,
             potentialVariation: Number.parseInt(document.getElementById("potentialVariation").value, 10) || 0,
             randomizeFinance: document.getElementById("randomizeFinance").checked,
-            randomizeHeadquarters: document.getElementById("randomizeHeadquarters").checked
+            randomizeHeadquarters: document.getElementById("randomizeHeadquarters").checked,
+            randomizeActiveTeams: document.getElementById("randomizeActiveTeams").checked,
+            activeTeamCount: document.getElementById("activeTeamCount").valueAsNumber
         };
     },
 
     runRandomize() {
         const options = this.collectOptions();
+        if (options.randomizeActiveTeams && (
+            !Number.isInteger(options.activeTeamCount) ||
+            options.activeTeamCount < 0 ||
+            options.activeTeamCount > this.state.teams.length
+        )) {
+            this.showToast(`Enter a valid active team count from 0 to ${this.state.teams.length}`, "error");
+            return;
+        }
         if (options.randomizeStatsRange && (
             !Number.isInteger(options.statsRangeMin) ||
             !Number.isInteger(options.statsRangeMax) ||
@@ -136,8 +146,11 @@ const App = {
             headquarters: "headquarters values"
         };
         const summary = Object.entries(report)
-            .filter(([, count]) => count > 0)
+            .filter(([group, count]) => group !== "activeTeams" && count > 0)
             .map(([group, count]) => `${count} ${labels[group]}`);
+        if (report.activeTeams !== null) {
+            summary.push(`${report.activeTeams} of ${this.state.teams.length} teams set active`);
+        }
         document.getElementById("reportBox").textContent = summary.length
             ? `Randomized ${summary.join(", ")} across ${this.state.teams.length} teams.`
             : "No numeric fields were available for the selected groups.";

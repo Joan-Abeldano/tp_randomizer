@@ -104,6 +104,18 @@ const Randomizer = {
         }
     },
 
+    randomizeStatsOverall(driver, minOverall, maxOverall) {
+        let remaining = this.randInt(minOverall, maxOverall);
+        const stats = window.GameData.STATS_FIELDS;
+        stats.forEach((stat, index) => {
+            const statsLeft = stats.length - index - 1;
+            const min = Math.max(window.GameData.STAT_MIN, remaining - statsLeft * window.GameData.STAT_MAX);
+            const max = Math.min(window.GameData.STAT_MAX, remaining - statsLeft * window.GameData.STAT_MIN);
+            driver[stat] = this.randInt(min, max);
+            remaining -= driver[stat];
+        });
+    },
+
     process(drivers, options, originalDrivers = drivers) {
         if (!Array.isArray(drivers)) {
             throw new Error("Expected an array of drivers");
@@ -113,6 +125,7 @@ const Randomizer = {
             processed: 0,
             statsRandomized: 0,
             defaultStats: 0,
+            overallStatsRandomized: 0,
             traitsRandomized: 0,
             personalitiesRandomized: 0,
             historyZeroed: 0,
@@ -129,6 +142,9 @@ const Randomizer = {
             if (options.perAgeStats) {
                 this.randomizeStatsForAge(clone);
                 report.statsRandomized++;
+            } else if (options.overallStats) {
+                this.randomizeStatsOverall(clone, options.overallMin, options.overallMax);
+                report.overallStatsRandomized++;
             } else if (options.defaultStats) {
                 this.randomizeStatsFlat(clone);
                 report.defaultStats++;

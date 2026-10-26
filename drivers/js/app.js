@@ -65,6 +65,18 @@ const App = {
     },
 
     bindOptions() {
+        const statOptions = ["optDefaultStats", "optPerAge", "optOverallStats"];
+        statOptions.forEach(optionId => {
+            const option = document.getElementById(optionId);
+            option.addEventListener("change", () => {
+                if (!option.checked) return;
+                statOptions.filter(id => id !== optionId)
+                    .forEach(id => { document.getElementById(id).checked = false; });
+                document.getElementById("ageBracketsSection").style.display =
+                    document.getElementById("optPerAge").checked ? "block" : "none";
+            });
+        });
+
         const perAge = document.getElementById("optPerAge");
         const ageSection = document.getElementById("ageBracketsSection");
         perAge.addEventListener("change", () => {
@@ -159,6 +171,9 @@ const App = {
         return {
             defaultStats: document.getElementById("optDefaultStats").checked,
             perAgeStats: document.getElementById("optPerAge").checked,
+            overallStats: document.getElementById("optOverallStats").checked,
+            overallMin: document.getElementById("overallMin").valueAsNumber,
+            overallMax: document.getElementById("overallMax").valueAsNumber,
             randomizeTraits: document.getElementById("optTraits").checked,
             randomizePersonalities: document.getElementById("optPersonalities").checked,
             zeroHistory: document.getElementById("optZeroHistory").checked,
@@ -174,6 +189,16 @@ const App = {
     runRandomize() {
         const options = this.collectOptions();
         if (!this.state.drivers.length) return;
+        if (options.overallStats && (
+            !Number.isInteger(options.overallMin) ||
+            !Number.isInteger(options.overallMax) ||
+            options.overallMin < window.GameData.STATS_FIELDS.length * window.GameData.STAT_MIN ||
+            options.overallMax > window.GameData.STATS_FIELDS.length * window.GameData.STAT_MAX ||
+            options.overallMin > options.overallMax
+        )) {
+            this.showToast("Enter a valid overall range from 5 to 100", "error");
+            return;
+        }
         if (!Object.values(options).some(value => typeof value === "boolean" && value)) {
             this.showToast("Select at least one randomization option", "error");
             return;
@@ -190,6 +215,7 @@ const App = {
             const changes = [
                 [report.statsRandomized, "age-based stats randomized"],
                 [report.defaultStats, "stats randomized (1-20)"],
+                [report.overallStatsRandomized, `overalls randomized (${options.overallMin}-${options.overallMax})`],
                 [report.traitsRandomized, "trait sets randomized"],
                 [report.personalitiesRandomized, "personalities randomized"],
                 [report.historyZeroed, "history records zeroed"],

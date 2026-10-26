@@ -33,7 +33,15 @@ const TeamRandomizer = {
     process(sourceTeams, options, originalTeams = sourceTeams) {
         window.TeamData.validate(sourceTeams);
         const teams = JSON.parse(JSON.stringify(sourceTeams));
-        const report = { stats: 0, potential: 0, potentialAdjusted: 0, budgets: 0, balances: 0, headquarters: 0 };
+        const report = { stats: 0, potential: 0, potentialAdjusted: 0, budgets: 0, balances: 0, headquarters: 0, activeTeams: null };
+
+        if (options.randomizeActiveTeams) {
+            const activeIndices = new Set(this.shuffle(teams.map((_, index) => index)).slice(0, options.activeTeamCount));
+            teams.forEach((team, index) => {
+                team.active = activeIndices.has(index);
+            });
+            report.activeTeams = options.activeTeamCount;
+        }
 
         teams.forEach((team, index) => {
             const original = originalTeams[index] || team;
