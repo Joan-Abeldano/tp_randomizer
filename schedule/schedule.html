@@ -54,8 +54,9 @@
                 <label class="opt"><span>Opening GP week</span><input type="number" id="openingWeek" min="1" max="52" step="1" value="1"></label>
                 <label class="opt"><span>Finale GP week</span><input type="number" id="finaleWeek" min="1" max="52" step="1" value="52"></label>
                 <label class="opt"><span>Number of tracks</span><input type="number" id="trackCount" min="1" max="52" step="1" value="10"></label>
+                <label class="opt"><span>Max consecutive race weeks</span><input type="number" id="maxConsecutiveWeeks" min="0" max="52" step="1" value="0"></label>
             </div>
-            <p class="hint">Week limits are inclusive. Randomization chooses distinct tracks from the loaded files and places them in distinct weeks.</p>
+            <p class="hint">Week limits are inclusive. Randomization chooses distinct tracks from the loaded files. Set the consecutive-week limit to 0 for no limit.</p>
         </section>
     </main>
 

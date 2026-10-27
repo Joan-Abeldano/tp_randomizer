@@ -1,16 +1,16 @@
 const TeamData = {
     fields: [
-        { stat: ["team_pace"], potential: ["chassis_starting_potential", "team_pace"] },
-        { stat: ["braking"], potential: ["chassis_starting_potential", "braking"] },
-        { stat: ["acceleration"], potential: ["chassis_starting_potential", "acceleration"] },
-        { stat: ["attr", "slow"], potential: ["chassis_starting_potential", "slow"] },
-        { stat: ["attr", "med"], potential: ["chassis_starting_potential", "med"] },
-        { stat: ["attr", "high"], potential: ["chassis_starting_potential", "high"] },
-        { stat: ["attr", "straight"], potential: ["chassis_starting_potential", "straight"] },
-        { stat: ["tyre_management"], potential: ["chassis_starting_potential", "tyre_management"] },
-        { stat: ["chassis_reliability"], potential: ["chassis_starting_potential", "chassis_reliability"] },
-        { stat: ["dirty_air_sensitivity"], potential: ["chassis_starting_potential", "dirty_air_sensitivity"] },
-        { stat: ["aero_efficiency_rating"], potential: ["chassis_starting_potential", "aero_efficiency_rating"] }
+        { label: "Team pace", stat: ["team_pace"], potential: ["chassis_starting_potential", "team_pace"] },
+        { label: "Braking", stat: ["braking"], potential: ["chassis_starting_potential", "braking"] },
+        { label: "Acceleration", stat: ["acceleration"], potential: ["chassis_starting_potential", "acceleration"] },
+        { label: "Slow corners", stat: ["attr", "slow"], potential: ["chassis_starting_potential", "slow"] },
+        { label: "Medium corners", stat: ["attr", "med"], potential: ["chassis_starting_potential", "med"] },
+        { label: "High-speed corners", stat: ["attr", "high"], potential: ["chassis_starting_potential", "high"] },
+        { label: "Straight-line", stat: ["attr", "straight"], potential: ["chassis_starting_potential", "straight"] },
+        { label: "Tyre management", stat: ["tyre_management"], potential: ["chassis_starting_potential", "tyre_management"] },
+        { label: "Chassis reliability", stat: ["chassis_reliability"], potential: ["chassis_starting_potential", "chassis_reliability"] },
+        { label: "Dirty-air sensitivity", stat: ["dirty_air_sensitivity"], potential: ["chassis_starting_potential", "dirty_air_sensitivity"] },
+        { label: "Aero efficiency", stat: ["aero_efficiency_rating"], potential: ["chassis_starting_potential", "aero_efficiency_rating"] }
     ],
     headquartersFields: [
         { key: "hospitality_pr_center", min: 1, max: 5 },

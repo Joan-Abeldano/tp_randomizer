@@ -7,9 +7,20 @@ const App = {
     },
 
     init() {
+        this.renderEqualTeamFields();
         this.bindUpload();
         this.bindOptions();
         this.bindActions();
+    },
+
+    renderEqualTeamFields() {
+        const container = document.getElementById("equalTeamFields");
+        container.innerHTML = window.TeamData.fields.map((field, index) => `
+            <label class="equal-team-field" for="equalStat${index}">
+                <span>${this.escape(field.label)}</span>
+                <input type="number" id="equalStat${index}" min="1" max="100" step="0.1" value="50" required>
+            </label>
+        `).join("");
     },
 
     bindOptions() {
@@ -19,11 +30,20 @@ const App = {
                     const option = document.getElementById(optionId);
                     option.addEventListener("change", () => {
                         if (!option.checked) return;
+                        document.getElementById("setTeamsEqual").checked = false;
+                        document.getElementById("equalTeamOptions").hidden = true;
                         optionIds.filter(id => id !== optionId)
                             .forEach(id => { document.getElementById(id).checked = false; });
                     });
                 });
             });
+        document.getElementById("setTeamsEqual").addEventListener("change", event => {
+            document.getElementById("equalTeamOptions").hidden = !event.target.checked;
+            if (event.target.checked) {
+                ["randomizeStats", "randomizeStatsRange", "statsNearOriginal", "randomizePotential", "potentialNearOriginal"]
+                    .forEach(id => { document.getElementById(id).checked = false; });
+            }
+        });
     },
 
     bindUpload() {
@@ -59,6 +79,7 @@ const App = {
             this.state.result = null;
             this.state.resultIsOriginal = false;
             this.state.fileName = file.name;
+            this.setEqualTeamDefaults(teams[0]);
             status.textContent = `Loaded ${teams.length} teams from ${file.name}`;
             status.className = "status success";
             this.showPanel("mainPanel");
@@ -67,6 +88,15 @@ const App = {
             status.textContent = `Error: ${error.message}`;
             status.className = "status error";
         }
+    },
+
+    setEqualTeamDefaults(team) {
+        window.TeamData.fields.forEach((field, index) => {
+            const value = window.TeamRandomizer.getValue(team, field.stat);
+            if (typeof value === "number" && Number.isFinite(value)) {
+                document.getElementById(`equalStat${index}`).value = value;
+            }
+        });
     },
 
     bindActions() {
@@ -86,6 +116,11 @@ const App = {
             statsRangeMax: Number(document.getElementById("statsRangeMax").value),
             statsNearOriginal: document.getElementById("statsNearOriginal").checked,
             statsVariation: Number.parseInt(document.getElementById("statsVariation").value, 10) || 0,
+            setTeamsEqual: document.getElementById("setTeamsEqual").checked,
+            equalStats: Object.fromEntries(window.TeamData.fields.map((field, index) => [
+                field.stat.join("."),
+                document.getElementById(`equalStat${index}`).valueAsNumber
+            ])),
             randomizePotential: document.getElementById("randomizePotential").checked,
             potentialNearOriginal: document.getElementById("potentialNearOriginal").checked,
             potentialVariation: Number.parseInt(document.getElementById("potentialVariation").value, 10) || 0,
@@ -98,6 +133,12 @@ const App = {
 
     runRandomize() {
         const options = this.collectOptions();
+        if (options.setTeamsEqual && Object.values(options.equalStats).some(value =>
+            !Number.isFinite(value) || value < 1 || value > 100
+        )) {
+            this.showToast("Enter a valid value from 1 to 100 for every team attribute", "error");
+            return;
+        }
         if (options.randomizeActiveTeams && (
             !Number.isInteger(options.activeTeamCount) ||
             options.activeTeamCount < 0 ||
@@ -146,8 +187,11 @@ const App = {
             headquarters: "headquarters values"
         };
         const summary = Object.entries(report)
-            .filter(([group, count]) => group !== "activeTeams" && count > 0)
+            .filter(([group, count]) => group !== "activeTeams" && group !== "equalized" && count > 0)
             .map(([group, count]) => `${count} ${labels[group]}`);
+        if (report.equalized) {
+            summary.unshift(`${report.equalized} attributes set equally across ${this.state.teams.length} teams`);
+        }
         if (report.activeTeams !== null) {
             summary.push(`${report.activeTeams} of ${this.state.teams.length} teams set active`);
         }

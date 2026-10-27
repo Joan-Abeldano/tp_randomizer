@@ -116,8 +116,20 @@ const App = {
         if (!this.state.source) return;
         try {
             const { openingWeek, finaleWeek } = this.getWeekRange();
-            this.state.result = window.ScheduleRandomizer.shuffle(this.state.result, openingWeek, finaleWeek);
-            this.showResult("Shuffled Schedule", `Shuffled weeks ${openingWeek}-${finaleWeek}.`);
+            const maxConsecutiveWeeks = document.getElementById("maxConsecutiveWeeks").valueAsNumber;
+            if (!Number.isInteger(maxConsecutiveWeeks) || maxConsecutiveWeeks < 0 || maxConsecutiveWeeks > 52) {
+                throw new Error("Enter a maximum consecutive-week limit from 0 to 52");
+            }
+            this.state.result = window.ScheduleRandomizer.shuffle(
+                this.state.result,
+                openingWeek,
+                finaleWeek,
+                maxConsecutiveWeeks
+            );
+            const limitReport = maxConsecutiveWeeks === 0
+                ? "with no consecutive-week limit"
+                : `with a maximum of ${maxConsecutiveWeeks} consecutive race weeks`;
+            this.showResult("Shuffled Schedule", `Shuffled weeks ${openingWeek}-${finaleWeek} ${limitReport}.`);
         } catch (error) {
             this.showToast(error.message, "error");
         }
@@ -128,7 +140,11 @@ const App = {
         try {
             const { openingWeek, finaleWeek } = this.getWeekRange();
             const count = document.getElementById("trackCount").valueAsNumber;
+            const maxConsecutiveWeeks = document.getElementById("maxConsecutiveWeeks").valueAsNumber;
             const availableWeeks = finaleWeek - openingWeek + 1;
+            if (!Number.isInteger(maxConsecutiveWeeks) || maxConsecutiveWeeks < 0 || maxConsecutiveWeeks > 52) {
+                throw new Error("Enter a maximum consecutive-week limit from 0 to 52");
+            }
             if (!Number.isInteger(count) || count < 1 || count > this.state.tracks.length || count > availableWeeks) {
                 throw new Error(`Choose between 1 and ${Math.min(this.state.tracks.length, availableWeeks)} tracks`);
             }
@@ -137,9 +153,13 @@ const App = {
                 this.state.tracks,
                 count,
                 openingWeek,
-                finaleWeek
+                finaleWeek,
+                maxConsecutiveWeeks
             );
-            this.showResult("Randomized Schedule", `Placed ${count} distinct tracks in weeks ${openingWeek}-${finaleWeek}.`);
+            const limitReport = maxConsecutiveWeeks === 0
+                ? "with no consecutive-week limit"
+                : `with a maximum of ${maxConsecutiveWeeks} consecutive race weeks`;
+            this.showResult("Randomized Schedule", `Placed ${count} distinct tracks in weeks ${openingWeek}-${finaleWeek} ${limitReport}.`);
         } catch (error) {
             this.showToast(error.message, "error");
         }

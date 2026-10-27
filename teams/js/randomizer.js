@@ -4,8 +4,12 @@ const TeamRandomizer = {
     },
 
     setValue(object, path, value) {
-        const parent = path.slice(0, -1).reduce((current, key) => current && current[key], object);
-        if (parent) parent[path[path.length - 1]] = value;
+        let parent = object;
+        for (const key of path.slice(0, -1)) {
+            if (!parent[key] || typeof parent[key] !== "object") parent[key] = {};
+            parent = parent[key];
+        }
+        parent[path[path.length - 1]] = value;
     },
 
     shuffle(values) {
@@ -33,7 +37,7 @@ const TeamRandomizer = {
     process(sourceTeams, options, originalTeams = sourceTeams) {
         window.TeamData.validate(sourceTeams);
         const teams = JSON.parse(JSON.stringify(sourceTeams));
-        const report = { stats: 0, potential: 0, potentialAdjusted: 0, budgets: 0, balances: 0, headquarters: 0, activeTeams: null };
+        const report = { stats: 0, potential: 0, potentialAdjusted: 0, budgets: 0, balances: 0, headquarters: 0, activeTeams: null, equalized: 0 };
 
         if (options.randomizeActiveTeams) {
             const activeIndices = new Set(this.shuffle(teams.map((_, index) => index)).slice(0, options.activeTeamCount));
@@ -110,6 +114,24 @@ const TeamRandomizer = {
                 report.headquarters++;
             }
         });
+
+        if (options.setTeamsEqual) {
+            for (const team of teams) {
+                for (const { stat } of window.TeamData.fields) {
+                    const key = stat.join(".");
+                    const value = options.equalStats?.[key];
+                    if (!Number.isFinite(value) || value < 1 || value > 100) {
+                        throw new Error(`Invalid shared value for ${key}`);
+                    }
+                    this.setValue(team, stat, value);
+                    if (key === "aero_efficiency_rating") {
+                        if (!team.aero || typeof team.aero !== "object") team.aero = {};
+                        team.aero.efficiency_rating = value;
+                    }
+                }
+            }
+            report.equalized = window.TeamData.fields.length;
+        }
 
         return { teams, report };
     }

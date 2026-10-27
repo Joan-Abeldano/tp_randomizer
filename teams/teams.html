@@ -38,12 +38,18 @@
 				<label class="opt"><input type="checkbox" id="randomizeStats"> <span>Randomize stats (1-100)</span></label>
 				<label class="opt stat-range-opt"><input type="checkbox" id="randomizeStatsRange"> <span>Randomize stats</span><span>from</span><input type="number" id="statsRangeMin" min="1" max="100" value="1" aria-label="Minimum randomized stat"><span>to</span><input type="number" id="statsRangeMax" min="1" max="100" value="100" aria-label="Maximum randomized stat"></label>
 				<label class="opt"><input type="checkbox" id="statsNearOriginal"> <span>Stats +/-</span><input type="number" id="statsVariation" min="0" max="99" value="10" aria-label="Stats variation from original"><span>from original</span></label>
+				<label class="opt"><input type="checkbox" id="setTeamsEqual"> <span>Set all teams equal</span></label>
 				<label class="opt"><input type="checkbox" id="randomizePotential"> <span>Randomize starting potential (1-100)</span></label>
 				<label class="opt"><input type="checkbox" id="potentialNearOriginal"> <span>Potential +/-</span><input type="number" id="potentialVariation" min="0" max="99" value="10" aria-label="Potential variation from original"><span>from original</span></label>
 				<label class="opt"><input type="checkbox" id="randomizeFinance"> <span>Randomize budget and balance</span></label>
 				<label class="opt"><input type="checkbox" id="randomizeHeadquarters"> <span>Randomize headquarters</span></label>
 				<label class="opt"><input type="checkbox" id="randomizeActiveTeams"> <span>Randomize active teams</span><input type="number" id="activeTeamCount" min="0" step="1" value="1" aria-label="Number of active teams"></label>
 			</div>
+			<section id="equalTeamOptions" class="equal-team-options" hidden aria-labelledby="equalTeamHeading">
+				<h3 id="equalTeamHeading">Shared team attributes</h3>
+				<div id="equalTeamFields" class="equal-team-grid"></div>
+				<p class="hint">Each value is applied to every team. Other team data is unchanged.</p>
+			</section>
 			<p class="hint">Potential stays at or above its matching stat. +/- modes use values from the uploaded file.</p>
 		</section>
 	</main>
