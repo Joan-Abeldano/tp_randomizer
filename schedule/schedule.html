@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Randomizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app">
+    <header class="app-header">
+        <a class="btn btn-secondary btn-sm" href="../index.html">Back to randomizers</a>
+        <h1>Schedule Randomizer</h1>
+        <p class="subtitle">Shuffle the current schedule or load tracks for more options lol.</p>
+    </header>
+
+    <section class="card upload-card upload-grid">
+        <div>
+            <h2>Current Schedule</h2>
+            <div id="scheduleDropZone" class="drop-zone">
+                <div class="drop-zone-inner">
+                    <div class="drop-icon">+</div>
+                    <p><strong>Click to upload</strong> or drag &amp; drop schedule.json</p>
+                </div>
+                <input type="file" id="scheduleFileInput" accept=".json,application/json" hidden>
+            </div>
+            <div id="scheduleStatus" class="status" role="status" aria-live="polite"></div>
+        </div>
+        <div>
+            <h2>Track Files</h2>
+            <div id="trackDropZone" class="drop-zone">
+                <div class="drop-zone-inner">
+                    <div class="drop-icon">+</div>
+                    <p><strong>Click to upload</strong> or drag &amp; drop track JSON files</p>
+                </div>
+                <input type="file" id="trackFileInput" accept=".json,application/json" multiple hidden>
+            </div>
+            <div id="trackStatus" class="status" role="status" aria-live="polite"></div>
+            <ul id="trackList" class="track-list" aria-label="Loaded tracks"></ul>
+        </div>
+    </section>
+
+    <main id="mainPanel" class="panel" style="display:none;">
+        <section class="card">
+            <div class="section-header">
+                <h2>Schedule Options</h2>
+                <div class="section-actions">
+                    <button id="shuffleBtn" class="btn btn-secondary">Shuffle current schedule</button>
+                    <button id="randomizeBtn" class="btn btn-primary" disabled>Randomize schedule</button>
+                    <button id="resetBtn" class="btn btn-danger" disabled>Reset</button>
+                </div>
+            </div>
+            <div class="options-grid schedule-options">
+                <label class="opt"><span>Opening GP week</span><input type="number" id="openingWeek" min="1" max="52" step="1" value="1"></label>
+                <label class="opt"><span>Finale GP week</span><input type="number" id="finaleWeek" min="1" max="52" step="1" value="52"></label>
+                <label class="opt"><span>Number of tracks</span><input type="number" id="trackCount" min="1" max="52" step="1" value="10"></label>
+            </div>
+            <p class="hint">Week limits are inclusive. Randomization chooses distinct tracks from the loaded files and places them in distinct weeks.</p>
+        </section>
+    </main>
+
+    <section id="resultPanel" class="panel" style="display:none;">
+        <div class="card">
+            <div class="section-header">
+                <h2 id="resultHeading">Current Schedule</h2>
+                <div class="section-actions">
+                    <button id="downloadBtn" class="btn btn-primary" disabled>Download JSON</button>
+                </div>
+            </div>
+            <div id="reportBox" class="report-box"></div>
+            <div id="resultTable"></div>
+        </div>
+    </section>
+
+    <footer class="app-footer"><p>By G4llet4</p></footer>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="../shared/fileHandler.js"></script>
+<script src="js/randomizer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

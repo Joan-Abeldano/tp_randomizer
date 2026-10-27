@@ -197,6 +197,10 @@ h1 {
     box-shadow: inset 3px 0 0 #df7164;
 }
 
+.schedule-card {
+    box-shadow: inset 3px 0 0 #66c3bd;
+}
+
 .card-meta,
 .card-bottom {
     display: flex;
@@ -283,6 +287,10 @@ h1 {
 
 .engine-card .link-arrow {
     color: #df7164;
+}
+
+.schedule-card .link-arrow {
+    color: #66c3bd;
 }
 
 .tool-link:hover .link-arrow {
