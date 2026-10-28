@@ -14,15 +14,29 @@
         <p class="subtitle">Randomize sponsor ratings and payments by rating level.</p>
     </header>
 
-    <section class="card upload-card">
-        <div id="dropZone" class="drop-zone">
-            <div class="drop-zone-inner">
-                <div class="drop-icon">+</div>
-                <p><strong>Click to upload</strong> or drag &amp; drop a sponsors JSON file</p>
+    <section class="card upload-card upload-grid">
+        <div>
+            <h2>Sponsor Catalog</h2>
+            <div id="dropZone" class="drop-zone">
+                <div class="drop-zone-inner">
+                    <div class="drop-icon">+</div>
+                    <p><strong>Click to upload</strong> or drag &amp; drop a sponsors JSON file</p>
+                </div>
+                <input type="file" id="fileInput" accept=".json,application/json" hidden>
             </div>
-            <input type="file" id="fileInput" accept=".json,application/json" hidden>
+            <div id="uploadStatus" class="status" role="status" aria-live="polite"></div>
         </div>
-        <div id="uploadStatus" class="status" role="status" aria-live="polite"></div>
+        <div>
+            <h2>Starting Team Sponsors</h2>
+            <div id="startingDropZone" class="drop-zone">
+                <div class="drop-zone-inner">
+                    <div class="drop-icon">+</div>
+                    <p><strong>Click to upload</strong> or drag &amp; drop starting_sponsors.json</p>
+                </div>
+                <input type="file" id="startingFileInput" accept=".json,application/json" hidden>
+            </div>
+            <div id="startingUploadStatus" class="status" role="status" aria-live="polite"></div>
+        </div>
     </section>
 
     <main id="mainPanel" class="panel" style="display:none;">
@@ -53,6 +67,22 @@
             </div>
         </section>
     </main>
+
+    <section id="startingPanel" class="panel" style="display:none;">
+        <div class="card">
+            <div class="section-header">
+                <h2 id="startingResultHeading">Starting Team Sponsors</h2>
+                <div class="section-actions">
+                    <label class="result-visibility"><input type="checkbox" id="showStartingResultTable" aria-controls="startingResultTable"> <span>Show result table</span></label>
+                    <button id="randomizeStartingBtn" class="btn btn-primary" disabled>Randomize starting sponsors</button>
+                    <button id="resetStartingBtn" class="btn btn-danger" disabled>Reset</button>
+                    <button id="downloadStartingBtn" class="btn btn-primary" disabled>Download JSON</button>
+                </div>
+            </div>
+            <div id="startingReportBox" class="report-box"></div>
+            <div id="startingResultTable" hidden></div>
+        </div>
+    </section>
 
     <section id="resultPanel" class="panel" style="display:none;">
         <div class="card">

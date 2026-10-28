@@ -4,18 +4,23 @@ const App = {
         result: null,
         resultIsOriginal: false,
         fileName: "sponsors.json",
+        startingSource: null,
+        startingResult: null,
+        startingFileName: "starting_sponsors.json",
+        startingResultIsOriginal: false,
         paymentTiers: [],
         defaultTiers: []
     },
 
     init() {
-        this.bindUpload();
+        this.bindUpload("dropZone", "fileInput", file => this.handleFile(file));
+        this.bindUpload("startingDropZone", "startingFileInput", file => this.handleStartingFile(file));
         this.bindActions();
     },
 
-    bindUpload() {
-        const dropZone = document.getElementById("dropZone");
-        const fileInput = document.getElementById("fileInput");
+    bindUpload(zoneId, inputId, onFile) {
+        const dropZone = document.getElementById(zoneId);
+        const fileInput = document.getElementById(inputId);
 
         dropZone.addEventListener("click", () => fileInput.click());
         dropZone.addEventListener("dragover", event => {
@@ -27,11 +32,12 @@ const App = {
             event.preventDefault();
             dropZone.classList.remove("dragover");
             const file = event.dataTransfer.files[0];
-            if (file) this.handleFile(file);
+            if (file) onFile(file);
         });
         fileInput.addEventListener("change", event => {
             const file = event.target.files[0];
-            if (file) this.handleFile(file);
+            if (file) onFile(file);
+            fileInput.value = "";
         });
     },
 
@@ -61,6 +67,30 @@ const App = {
             status.className = "status success";
             this.showPanel("mainPanel");
             this.updateButtonStates();
+        } catch (error) {
+            status.textContent = `Error: ${error.message}`;
+            status.className = "status error";
+        }
+    },
+
+    async handleStartingFile(file) {
+        const status = document.getElementById("startingUploadStatus");
+        try {
+            status.textContent = "Reading file";
+            status.className = "status loading";
+            const data = await window.FileHandler.readJSON(file);
+            window.SponsorRandomizer.validateStarting(data);
+            this.state.startingSource = data;
+            this.state.startingResult = JSON.parse(JSON.stringify(data));
+            this.state.startingResultIsOriginal = true;
+            this.state.startingFileName = file.name;
+            status.textContent = `Loaded ${data.teams.length} teams from ${file.name}`;
+            status.className = "status success";
+            document.getElementById("startingResultHeading").textContent = "Starting Team Sponsors";
+            document.getElementById("startingReportBox").textContent = "Original starting sponsors loaded.";
+            this.renderStartingTable(this.state.startingResult);
+            this.showPanel("startingPanel");
+            this.updateStartingButtonStates();
         } catch (error) {
             status.textContent = `Error: ${error.message}`;
             status.className = "status error";
@@ -98,11 +128,75 @@ const App = {
         document.getElementById("showResultTable").addEventListener("change", event => {
             document.getElementById("resultTable").hidden = !event.target.checked;
         });
+        document.getElementById("showStartingResultTable").addEventListener("change", event => {
+            document.getElementById("startingResultTable").hidden = !event.target.checked;
+        });
         document.getElementById("addTierBtn").addEventListener("click", () => this.addTier());
         document.getElementById("resetTiersBtn").addEventListener("click", () => {
             this.state.paymentTiers = this.state.defaultTiers.map(tier => ({ ...tier }));
             this.renderPaymentTiers();
         });
+        document.getElementById("randomizeStartingBtn").addEventListener("click", () => this.runStartingRandomize());
+        document.getElementById("resetStartingBtn").addEventListener("click", () => this.resetStarting());
+        document.getElementById("downloadStartingBtn").addEventListener("click", () => this.downloadStarting());
+    },
+
+    runStartingRandomize() {
+        if (!this.state.startingSource) return;
+        try {
+            const { data, teamCount, sponsorCount } = window.SponsorRandomizer.randomizeStarting(
+                this.state.startingResult || this.state.startingSource
+            );
+            this.state.startingResult = data;
+            this.state.startingResultIsOriginal = false;
+            document.getElementById("startingResultHeading").textContent = "Randomized Starting Sponsors";
+            document.getElementById("startingReportBox").textContent =
+                `Reassigned ${sponsorCount} sponsor names across ${teamCount} teams; slot and contract details were preserved.`;
+            this.renderStartingTable(data);
+            this.updateStartingButtonStates();
+            this.showToast("Starting sponsors randomized", "success");
+        } catch (error) {
+            this.showToast(`Error: ${error.message}`, "error");
+        }
+    },
+
+    renderStartingTable(data) {
+        const rows = data.teams.map(team => {
+            const assignments = team.sponsors.map(sponsor =>
+                `${this.escape(sponsor.slot ?? "Sponsor")}: ${this.escape(sponsor.name)}`
+            ).join("<br>");
+            return `<tr><td>${this.escape(team.team)}</td><td>${assignments}</td></tr>`;
+        }).join("");
+        document.getElementById("startingResultTable").innerHTML = `<div class="table-wrap"><table>
+            <thead><tr><th>Team</th><th>Starting sponsors</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table></div>`;
+    },
+
+    resetStarting() {
+        if (!this.state.startingSource) return;
+        this.state.startingResult = JSON.parse(JSON.stringify(this.state.startingSource));
+        this.state.startingResultIsOriginal = true;
+        document.getElementById("startingResultHeading").textContent = "Starting Team Sponsors";
+        document.getElementById("startingReportBox").textContent = "Restored from the uploaded file.";
+        this.renderStartingTable(this.state.startingResult);
+        this.updateStartingButtonStates();
+        this.showToast("Restored starting sponsors", "success");
+    },
+
+    downloadStarting() {
+        if (!this.state.startingResult) return;
+        const prefix = this.state.startingResultIsOriginal ? "original_" : "randomized_";
+        const name = prefix + this.state.startingFileName;
+        window.FileHandler.downloadJSON(this.state.startingResult, name);
+        this.showToast(`Downloaded ${name}`, "success");
+    },
+
+    updateStartingButtonStates() {
+        const hasData = !!this.state.startingSource;
+        document.getElementById("randomizeStartingBtn").disabled = !hasData;
+        document.getElementById("resetStartingBtn").disabled = !hasData;
+        document.getElementById("downloadStartingBtn").disabled = !this.state.startingResult;
     },
 
     renderPaymentTiers() {

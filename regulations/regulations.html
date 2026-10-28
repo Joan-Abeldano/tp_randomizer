@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulations Randomizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app">
+    <header class="app-header">
+        <a class="btn btn-secondary btn-sm" href="../index.html">Back to randomizers</a>
+        <h1>Regulations Randomizer</h1>
+        <p class="subtitle">Randomize regulation defaults.</p>
+    </header>
+
+    <section class="card upload-card">
+        <div id="dropZone" class="drop-zone">
+            <div class="drop-zone-inner">
+                <div class="drop-icon">+</div>
+                <p><strong>Click to upload</strong> or drag &amp; drop a regulations JSON file</p>
+            </div>
+            <input type="file" id="fileInput" accept=".json,application/json" hidden>
+        </div>
+        <div id="uploadStatus" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <main id="mainPanel" class="panel" style="display:none;">
+        <section class="card">
+            <div class="section-header">
+                <h2>Randomization Options</h2>
+                <div class="section-actions">
+                    <button id="randomizeBtn" class="btn btn-primary" disabled>Randomize</button>
+                    <button id="resetBtn" class="btn btn-danger" disabled>Reset</button>
+                </div>
+            </div>
+            <div id="optionsGrid" class="options-grid regulations-options"></div>
+        </section>
+    </main>
+
+    <section id="resultPanel" class="panel" style="display:none;">
+        <div class="card">
+            <div class="section-header">
+                <h2 id="resultHeading">Randomized Regulations</h2>
+                <div class="section-actions">
+                    <label class="result-visibility"><input type="checkbox" id="showResultTable" aria-controls="resultTable"> <span>Show result table</span></label>
+                    <button id="downloadBtn" class="btn btn-primary" disabled>Download JSON</button>
+                </div>
+            </div>
+            <div id="resultTable" hidden></div>
+        </div>
+    </section>
+
+    <footer class="app-footer"><p>By G4llet4</p></footer>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="../shared/fileHandler.js"></script>
+<script src="js/randomizer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+@import url("../../teams/css/styles.css");
+
+.regulations-options {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.regulation-opt {
+    justify-content: flex-start;
+}
+
+.regulation-opt span {
+    flex: 1;
+}
+
+.regulation-opt small {
+    color: var(--text-dim);
+    font-size: 12px;
+    text-align: right;
+}
+
+.regulation-card {
+    box-shadow: inset 3px 0 0 #d9c46b;
+}

@@ -1,5 +1,16 @@
 @import url("../../engines/css/styles.css");
 
+.upload-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.upload-grid h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+}
+
 .tier-section {
     margin-top: 20px;
     padding-top: 20px;
@@ -44,6 +55,10 @@
 }
 
 @media (max-width: 650px) {
+    .upload-grid {
+        grid-template-columns: 1fr;
+    }
+
     .tier-row {
         grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
     }

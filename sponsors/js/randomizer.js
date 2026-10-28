@@ -42,6 +42,35 @@ const SponsorRandomizer = {
         }
 
         return { sponsors, report };
+    },
+
+    validateStarting(data) {
+        if (!data || typeof data !== "object" || Array.isArray(data) || !Array.isArray(data.teams)) {
+            throw new Error("Starting sponsors JSON must contain a teams array");
+        }
+        if (data.teams.some(team => !team || typeof team !== "object" || Array.isArray(team) ||
+            typeof team.team !== "string" || !Array.isArray(team.sponsors) ||
+            team.sponsors.some(sponsor => !sponsor || typeof sponsor !== "object" || Array.isArray(sponsor) ||
+                typeof sponsor.name !== "string"))) {
+            throw new Error("Every starting team must have a name and a sponsors array with named sponsors");
+        }
+    },
+
+    randomizeStarting(source) {
+        this.validateStarting(source);
+        const data = JSON.parse(JSON.stringify(source));
+        const sponsors = data.teams.flatMap(team => team.sponsors);
+        const names = sponsors.map(sponsor => sponsor.name);
+
+        for (let index = names.length - 1; index > 0; index--) {
+            const swapIndex = Math.floor(Math.random() * (index + 1));
+            [names[index], names[swapIndex]] = [names[swapIndex], names[index]];
+        }
+        sponsors.forEach((sponsor, index) => {
+            sponsor.name = names[index];
+        });
+
+        return { data, teamCount: data.teams.length, sponsorCount: sponsors.length };
     }
 };
 

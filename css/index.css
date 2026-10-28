@@ -154,13 +154,13 @@ h1 {
 
 .tool-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
     padding-bottom: 56px;
 }
 
 .tool-card {
-    min-height: 248px;
+    min-height: 120px;
     display: flex;
     flex-direction: column;
     padding: 20px 22px 18px;
@@ -199,6 +199,10 @@ h1 {
 
 .schedule-card {
     box-shadow: inset 3px 0 0 #66c3bd;
+}
+
+.regulation-card {
+    box-shadow: inset 3px 0 0 #d9c46b;
 }
 
 .card-meta,
