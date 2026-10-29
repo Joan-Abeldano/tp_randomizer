@@ -1,0 +1,30 @@
+@import url("../../teams/css/styles.css");
+
+.range-opt {
+    flex-wrap: wrap;
+}
+
+.supplier-status-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.active-count-opt input[type="number"] {
+    width: 72px;
+    flex: 0 0 72px;
+}
+
+.stat-category {
+    grid-column: 1 / -1;
+    margin-bottom: 18px;
+}
+
+.stat-category h3 {
+    margin: 0 0 10px;
+}
+
+.stat-category .options-grid {
+    margin-bottom: 0;
+}

@@ -205,6 +205,14 @@ h1 {
     box-shadow: inset 3px 0 0 #d9c46b;
 }
 
+.parts-card {
+    box-shadow: inset 3px 0 0 #8bba82;
+}
+
+.tyre-supplier-card {
+    box-shadow: inset 3px 0 0 #e8bd54;
+}
+
 .card-meta,
 .card-bottom {
     display: flex;

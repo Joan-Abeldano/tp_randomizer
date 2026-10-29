@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parts Randomizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app">
+    <header class="app-header">
+        <a class="btn btn-secondary btn-sm" href="../index.html">Back to randomizers</a>
+        <h1>Parts Randomizer</h1>
+        <p class="subtitle">Randomize part supplier stats and default team contracts.</p>
+    </header>
+
+    <section class="card upload-card">
+        <div id="dropZone" class="drop-zone">
+            <div class="drop-zone-inner">
+                <div class="drop-icon">+</div>
+                <p><strong>Click to upload</strong> or drag &amp; drop a parts JSON file</p>
+            </div>
+            <input type="file" id="fileInput" accept=".json,application/json" hidden>
+        </div>
+        <div id="uploadStatus" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <main id="mainPanel" class="panel" style="display:none;">
+        <section class="card">
+            <div class="section-header">
+                <h2>Part Stats</h2>
+                <div class="section-actions">
+                    <button id="randomizeBtn" class="btn btn-primary" disabled>Randomize</button>
+                    <button id="resetBtn" class="btn btn-danger" disabled>Reset</button>
+                </div>
+            </div>
+            <div class="part-selector">
+                <div class="part-selector-header">
+                    <h3>Parts to randomize</h3>
+                    <label class="part-choice"><input type="checkbox" id="allParts" checked> <span>All parts</span></label>
+                </div>
+                <div id="partCategoryChoices" class="part-category-choices"></div>
+            </div>
+            <div class="options-grid">
+                <label class="opt range-opt"><input type="checkbox" id="randomizeWear"><span>Base wear per lap</span><span>from</span><input type="number" id="wearMin" min="0" step="0.0001" aria-label="Minimum base wear per lap"><span>to</span><input type="number" id="wearMax" min="0" step="0.0001" aria-label="Maximum base wear per lap"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeFailure"><span>Failure probability</span><span>from</span><input type="number" id="failureMin" min="0" step="0.0001" aria-label="Minimum failure probability"><span>to</span><input type="number" id="failureMax" min="0" step="0.0001" aria-label="Maximum failure probability"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizePace"><span>Pace rating</span><span>from</span><input type="number" id="paceMin" min="0" max="100" step="1" aria-label="Minimum pace rating"><span>to</span><input type="number" id="paceMax" min="0" max="100" step="1" aria-label="Maximum pace rating"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeReliability"><span>Reliability rating</span><span>from</span><input type="number" id="reliabilityMin" min="0" max="100" step="1" aria-label="Minimum reliability rating"><span>to</span><input type="number" id="reliabilityMax" min="0" max="100" step="1" aria-label="Maximum reliability rating"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeBudget"><span>Supplier budget (M)</span><span>from</span><input type="number" id="budgetMin" min="0" step="0.1" aria-label="Minimum supplier budget"><span>to</span><input type="number" id="budgetMax" min="0" step="0.1" aria-label="Maximum supplier budget"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeWeights"><span>Pace development weight</span><span>from</span><input type="number" id="weightsMin" min="0" max="1" step="0.01" aria-label="Minimum pace development weight"><span>to</span><input type="number" id="weightsMax" min="0" max="1" step="0.01" aria-label="Maximum pace development weight"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeAllocation"><span>Allocation per season</span><span>from</span><input type="number" id="allocationMin" min="0" step="1" aria-label="Minimum seasonal allocation"><span>to</span><input type="number" id="allocationMax" min="0" step="1" aria-label="Maximum seasonal allocation"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeCustomers"><span>Maximum customers</span><span>from</span><input type="number" id="customersMin" min="0" step="1" aria-label="Minimum maximum customers"><span>to</span><input type="number" id="customersMax" min="0" step="1" aria-label="Maximum maximum customers"></label>
+            </div>
+            <p class="hint">Development weights stay balanced: the reliability weight is set to 1 minus the pace weight.</p>
+        </section>
+
+        <section class="card">
+            <div class="section-header"><h2>Default Contracts</h2></div>
+            <div class="options-grid contract-options">
+                <label class="opt"><input type="checkbox" id="randomizeContractSuppliers"><span>Shuffle supplier assignments within each part category</span></label>
+                <label class="opt"><input type="checkbox" id="randomizeContractTypes"><span>Shuffle contract types</span></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizeContractYears"><span>Contract years</span><span>from</span><input type="number" id="contractYearsMin" min="1" step="1" aria-label="Minimum contract years"><span>to</span><input type="number" id="contractYearsMax" min="1" step="1" aria-label="Maximum contract years"></label>
+                <label class="opt range-opt"><input type="checkbox" id="randomizePartsPerSeason"><span>Parts per season</span><span>from</span><input type="number" id="partsPerSeasonMin" min="0" step="1" aria-label="Minimum parts per season"><span>to</span><input type="number" id="partsPerSeasonMax" min="0" step="1" aria-label="Maximum parts per season"></label>
+            </div>
+            <p class="hint">Range fields default to the minimum and maximum values in the uploaded file.</p>
+        </section>
+    </main>
+
+    <section id="resultPanel" class="panel" style="display:none;">
+        <div class="card">
+            <div class="section-header">
+                <h2 id="resultHeading">Randomized Parts</h2>
+                <div class="section-actions">
+                    <label class="result-visibility"><input type="checkbox" id="showResultTable" aria-controls="resultTable"> <span>Show result table</span></label>
+                    <button id="downloadBtn" class="btn btn-primary" disabled>Download JSON</button>
+                </div>
+            </div>
+            <div id="resultTable" hidden></div>
+        </div>
+    </section>
+
+    <footer class="app-footer"><p>By G4llet4</p></footer>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script src="../shared/fileHandler.js"></script>
+<script src="js/randomizer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
