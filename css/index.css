@@ -197,6 +197,10 @@ h1 {
     box-shadow: inset 3px 0 0 #df7164;
 }
 
+.sponsor-card {
+    box-shadow: inset 3px 0 0 #5e2479;
+}
+
 .schedule-card {
     box-shadow: inset 3px 0 0 #66c3bd;
 }
